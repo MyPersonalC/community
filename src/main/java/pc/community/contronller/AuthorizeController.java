@@ -11,7 +11,8 @@ import pc.community.mapper.UserMapper;
 import pc.community.model.User;
 import pc.community.provider.GithubProvider;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Controller
@@ -34,9 +35,8 @@ public class AuthorizeController {
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
-                           HttpServletRequest request) {
+                           HttpServletResponse response) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
-
         accessTokenDTO.setClient_id(client_id);
         accessTokenDTO.setClient_secret(client_secret);
         accessTokenDTO.setCode(code);
@@ -45,15 +45,17 @@ public class AuthorizeController {
         String access_token = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser githubUser = githubProvider.getUer(access_token);
         if (githubUser != null) {
-            //登录成功缓存cookie和session
+            //登录，获取用户信息，生成一个token存储在数据库中，并且手动将token添加到cookie中
             User user = new User();
-            user.setToken(UUID.randomUUID().toString());
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
             user.setName(githubUser.getName());
             user.setAccount_id(String.valueOf(githubUser.getId()));
             user.setGmt_create(System.currentTimeMillis());
             user.setGmt_modified(user.getGmt_create());
             userMapper.insert(user);
-            request.getSession().setAttribute("user", githubUser);
+            //登录成功缓存cookie和session
+            response.addCookie(new Cookie("token", token));
             //地址去掉，redirect重定向到首页
             return "redirect:/";
         } else {
