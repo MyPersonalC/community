@@ -9,7 +9,7 @@ import pc.community.dto.GithubUser;
 @Component
 public class GithubProvider {
 
-    public String getAccessToken(AccessTokenDTO accessTokenDTO){
+    public String getAccessToken(AccessTokenDTO accessTokenDTO) {
         MediaType mediaType = MediaType.get("application/json; charset=utf-8");
 
         OkHttpClient client = new OkHttpClient();
@@ -23,7 +23,7 @@ public class GithubProvider {
             String string = response.body().string();
             String access_token = string.split("&")[0].split("=")[1];//分割字符串获取access_token
             return access_token;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -31,10 +31,11 @@ public class GithubProvider {
 
     /**
      * 通过access_token获取GitHubUser对象
+     *
      * @param access_token access_token
      * @return 返回一个GitHubUser对象
      */
-    public GithubUser getUer(String access_token){
+    public GithubUser getUer(String access_token) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("https://api.github.com/user?access_token=" + access_token)
