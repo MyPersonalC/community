@@ -1,0 +1,36 @@
+body {
+    background-color: #efefef;
+}
+
+.main {
+    background-color: white;
+    margin: 30px;
+}
+
+.btn-publish {
+    float: right;
+    margin-bottom: 10px;
+}
+
+.que-desc-publish {
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.media-object {
+    width: 42px;
+    height: 42px;
+}
+
+.text-desc {
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+}
+.profile .section{
+    margin-top: 100px;
+}
+.community-menu{
+    color: #999;
+    font-size: 12px;
+}

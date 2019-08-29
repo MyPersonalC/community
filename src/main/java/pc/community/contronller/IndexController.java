@@ -2,34 +2,27 @@ package pc.community.contronller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import pc.community.mapper.UserMapper;
-import pc.community.model.User;
+import org.springframework.web.bind.annotation.RequestParam;
+import pc.community.dto.PageInationDTO;
+import pc.community.service.QuestionService;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class IndexController {
 
+
     @Autowired
-    private UserMapper userMapper;
+    private QuestionService questionService;
 
     @GetMapping("/")
-    public String index(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("token")) {
-                String token = cookie.getValue();
-                User user = userMapper.findByToken(token);
-                if (user != null) {
-                    request.getSession().setAttribute("user", user);
-                }
-                break;
-            }
-        }
+    public String index(Model model,
+                        @RequestParam(name = "page", defaultValue = "1") Integer page,
+                        @RequestParam(name = "size", defaultValue = "5") Integer size) {
+        PageInationDTO pageInation = questionService.list(page,size);
+        model.addAttribute("pageInation", pageInation);
         return "index";
     }
-
-
 }

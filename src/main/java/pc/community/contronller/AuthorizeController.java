@@ -10,8 +10,10 @@ import pc.community.dto.GithubUser;
 import pc.community.mapper.UserMapper;
 import pc.community.model.User;
 import pc.community.provider.GithubProvider;
+import pc.community.service.UserService;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -23,6 +25,8 @@ public class AuthorizeController {
     private GithubProvider githubProvider;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserService userService;
 
     //通过注解获取配置文件里的配置
     @Value("${github.client.id}")
@@ -44,16 +48,17 @@ public class AuthorizeController {
         accessTokenDTO.setState(state);
         String access_token = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser githubUser = githubProvider.getUer(access_token);
-        if (githubUser != null) {
+        if (githubUser != null && (githubUser.getId() != null)) {
             //登录，获取用户信息，生成一个token存储在数据库中，并且手动将token添加到cookie中
             User user = new User();
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             user.setName(githubUser.getName());
             user.setAccount_id(String.valueOf(githubUser.getId()));
-            user.setGmt_create(System.currentTimeMillis());
-            user.setGmt_modified(user.getGmt_create());
-            userMapper.insert(user);
+            user.setAvatar_url(githubUser.getAvatar_url());
+            user.setBio(githubUser.getBio());
+            //查看数据库中是否含有当前用户，做更新或者插入操作
+            userService.insertOrUpdate(user);
             //登录成功缓存cookie和session
             response.addCookie(new Cookie("token", token));
             //地址去掉，redirect重定向到首页
@@ -62,6 +67,15 @@ public class AuthorizeController {
             //登录失败，重新登录
             return "redirect:/";
         }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request ,HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token",null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 
 }
