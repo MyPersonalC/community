@@ -1,5 +1,6 @@
 package pc.community.contronller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Controller
+@Slf4j
 public class AuthorizeController {
 
 
@@ -64,6 +66,7 @@ public class AuthorizeController {
             //地址去掉，redirect重定向到首页
             return "redirect:/";
         } else {
+            log.error("callback get github error,{}",githubUser);
             //登录失败，重新登录
             return "redirect:/";
         }
