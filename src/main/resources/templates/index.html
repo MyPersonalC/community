@@ -9,6 +9,16 @@
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
 </head>
+<script type="application/javascript">
+    window.onload = function () {
+        var closable = window.localStorage.getItem("closable");
+        if (closable == "true"){
+            window.close();
+            window.localStorage.removeItem("closable");
+        }
+    }
+
+</script>
 <body>
 <div th:insert="navigation::nav"></div>
 <div class="container-fluid main">
@@ -16,22 +26,22 @@
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             <h2><span class="glyphicon glyphicon-hourglass" aria-hidden="true"></span>话题</h2>
             <hr>
-            <div class="media" th:each="question : ${pageInation.questionlist}">
+            <div class="media" th:each="question : ${pageInation.data}">
                 <div class="media-left">
                     <a href="#">
                         <img class="media-object img-rounded"
-                             th:src="${question.user.avatar_url}">
+                             th:src="${question.user.avatarUrl}">
                     </a>
                 </div>
                 <div class="media-body">
                     <h4 class="media-heading">
                         <a th:href="@{'/question/'+${question.id}}" th:text="${question.title}"></a>
                     </h4>
-                    <span th:text="${question.description}"></span> <br>
+<!--                    <span th:text="${question.description}"></span> <br>-->
                     <span class="text-desc">
-                        <span th:text="${question.comment_count}"></span>个回复 ·
-                        <span th:text="${question.view_count}"></span>次浏览 ·
-                        <span th:text="${#dates.format(question.gmt_create,'yyyy-MM-dd HH:mm')}"></span>
+                        <span th:text="${question.commentCount}"></span>个回复 ·
+                        <span th:text="${question.viewCount}"></span>次浏览 ·
+                        <span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}"></span>
                     </span>
                 </div>
             </div>
@@ -44,20 +54,20 @@
                            </a>
                         </li>
                         <li th:if="${pageInation.showPrevious}">
-                            <a th:href="@{/(page=${(pageInation.page) - 1})}" aria-label="Previous">
+                            <a th:href="@{/(page=${(pageInation.page) - 1},search=${search})}" aria-label="Previous">
                                 <span aria-hidden="true">&lsaquo;</span>
                             </a>
                         </li>
                         <li th:class="${pageInation.page == page} ? 'active' : ''" th:each="page : ${pageInation.pages}">
-                            <a th:href="@{/(page=${page})}" th:text="${page}"></a>
+                            <a th:href="@{/(page=${page},search=${search})}" th:text="${page}"></a>
                         </li>
                         <li th:if="${pageInation.showNext}">
-                            <a th:href="@{/(page=${(pageInation.page) + 1})}" aria-label="Next">
+                            <a th:href="@{/(page=${(pageInation.page) + 1},search=${search})}" aria-label="Next">
                                 <span aria-hidden="true">&rsaquo;</span>
                             </a>
                         </li>
                         <li th:if="${pageInation.showEndPage}">
-                            <a th:href="@{/(page=${pageInation.totalPage})} " aria-label="Next">
+                            <a th:href="@{/(page=${pageInation.totalPage},search=${search})} " aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>

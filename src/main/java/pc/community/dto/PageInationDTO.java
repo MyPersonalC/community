@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Data
-public class PageInationDTO {
-    private CopyOnWriteArrayList<QuestionDTO> questionlist;
+public class PageInationDTO<T> {
+    private CopyOnWriteArrayList<T> data;
     private boolean showPrevious;
     private boolean showFirstPage;
     private boolean showNext;

@@ -5,11 +5,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import pc.community.dto.CommentDTO;
 import pc.community.dto.QuestionDTO;
-import pc.community.model.User;
+import pc.community.enums.CommentTypeEnum;
+import pc.community.service.CommentService;
 import pc.community.service.QuestionService;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class QuestionController {
@@ -17,18 +19,20 @@ public class QuestionController {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private CommentService commentService;
+
     @GetMapping("/question/{id}")
-    public String question(@PathVariable(name = "id") Long id,
-                           Model model,
-                           HttpServletRequest request){
+    public String question(@PathVariable(name = "id") Long id, Model model) {
         QuestionDTO questionDTO = questionService.getQuestionById(id);
-        //未登录用户可以查看问题页
-//        User user = (User) request.getSession().getAttribute("user");
-//        if (user == null){
-//            return "index";
-//        }
-//        questionDTO.setUser(user);
-        model.addAttribute("question",questionDTO);
+        List<QuestionDTO> relatedQuestions = questionService.selectRelated(questionDTO);
+        List<CommentDTO> comments = commentService.listByTargetId(id, CommentTypeEnum.QUESTION);
+        //累加阅读数//并发问题的产生
+        questionService.incView(id);
+
+        model.addAttribute("question", questionDTO);
+        model.addAttribute("comments", comments);
+        model.addAttribute("relatedQuestions",relatedQuestions);
         return "question";
     }
 }

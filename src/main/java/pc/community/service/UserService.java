@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pc.community.mapper.UserMapper;
 import pc.community.model.User;
+import pc.community.model.UserExample;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -11,18 +14,24 @@ public class UserService {
     private UserMapper userMapper;
 
     public void insertOrUpdate(User user) {
-        User dbUser = userMapper.findByAccountId(user.getAccount_id());
-        if(dbUser!=null){
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andAccountIdEqualTo(user.getAccountId());
+        List<User> users = userMapper.selectByExample(userExample);
+        if(!users.isEmpty()){
             //更新
-            dbUser.setGmt_modified(System.currentTimeMillis());
-            dbUser.setAvatar_url(user.getAvatar_url());
-            dbUser.setName(user.getName());
-            dbUser.setToken(user.getToken());
-            dbUser.setBio(user.getBio());
-            userMapper.update(dbUser);
+            User dbUser = users.get(0);
+            User updateUser = new User();
+            updateUser.setGmtModified(System.currentTimeMillis());
+            updateUser.setAvatarUrl(user.getAvatarUrl());
+            updateUser.setName(user.getName());
+            updateUser.setToken(user.getToken());
+            updateUser.setBio(user.getBio());
+            userExample.createCriteria()
+                    .andIdEqualTo(dbUser.getId());
+            userMapper.updateByExampleSelective(updateUser,userExample);
         }else {
-            user.setGmt_create(System.currentTimeMillis());
-            user.setGmt_modified(user.getGmt_create());
+            user.setGmtCreate(System.currentTimeMillis());
+            user.setGmtModified(user.getGmtCreate());
             userMapper.insert(user);
         }
     }
