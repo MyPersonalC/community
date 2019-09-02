@@ -159,3 +159,10 @@ body {
 .menu .icon:hover {
     color: #499ef3;
 }
+.index-ad{
+    margin-top: 20%;
+}
+.footer{
+    padding: 10px 30%;
+    color: #666;
+}
