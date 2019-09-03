@@ -37,7 +37,7 @@
     <select id="countBySearch" parameterType="pc.community.dto.QuestionQueryDTO" resultType="java.lang.Integer">
         select count(*) from QUESTION
         <where>
-            <if test="(search != null) || (search != '')">
+            <if test="(search != null) and (search != '')">
                 and title regexp #{search}
             </if>
         </where>
@@ -46,7 +46,7 @@
     <select id="selectBySearch" parameterType="pc.community.dto.QuestionQueryDTO" resultMap="BaseResultMap">
         select * from QUESTION
         <where>
-            <if test="(search != null )|| (search != '') ">
+            <if test="(search != null ) and (search != '') ">
                 and title regexp #{search}
             </if>
         </where>
