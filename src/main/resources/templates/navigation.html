@@ -49,7 +49,7 @@
                         </ul>
                     </li>
                     <li th:if="${session.user == null}">
-                        <a href="https://github.com/login/oauth/authorize?client_id=bb32e81291cf868872b7&redirect_uri=http://localhost:8887/callback&scope=user&state=1">未登录，请先登录</a>
+                        <a th:href="@{https://github.com/login/oauth/authorize(client_id='bb32e81291cf868872b7',redirect_uri=${#httpServletRequest.getRequestURL()+'callback'},scope='user',state='1')}">未登录，请先登录</a>
                     </li>
 
                 </ul>
