@@ -63,11 +63,11 @@ public class PublishController {
             return "publish";
         }
         Question question = new Question();
+        question.setId(question_id);
         question.setTitle(title);
         question.setDescription(description);
         question.setTag(tag);
         question.setCreator(user.getId());
-        question.setId(question_id);
         questionService.createOrUpdate(question);
 
         return "redirect:/";
