@@ -56,7 +56,7 @@ public class QuestionService {
         pageInationDTO.setPageInation(totalPage, page);
 
         //列出page页面
-        Integer offset = size * (page - 1);
+        Integer offset = (page < 1) ? 0 : size * (page - 1);
         QuestionExample questionExample = new QuestionExample();
         questionExample.setOrderByClause("gmt_create desc");
         questionQueryDTO.setPage(offset);
@@ -87,7 +87,7 @@ public class QuestionService {
         pageInationDTO.setPageInation(totalPage, page);
 
         //列出page页面
-        Integer offset = size * (page - 1);
+        Integer offset = (page < 1) ? 0 : size * (page - 1);
 
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria().andCreatorEqualTo(userId);
