@@ -1,8 +1,8 @@
-CREATE CACHED TABLE USER(
-    ID BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    ACCOUNT_ID VARCHAR(100),
-    NAME VARCHAR(50),
-    TOKEN CHARACTER(36),
-    GMT_CREATE BIGINT,
-    GMT_MODIFIED BIGINT
+create cached table user(
+    id bigint auto_increment primary key not null,
+    account_id varchar(100),
+    name varchar(50),
+    token character(36),
+    gmt_create bigint,
+    gmt_modified bigint
 );
