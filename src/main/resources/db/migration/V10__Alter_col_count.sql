@@ -1,1 +1,0 @@
-alter table comment alter column "comment_count" rename to comment_count;

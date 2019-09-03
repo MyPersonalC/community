@@ -1,4 +1,4 @@
-create cached table user(
+create table user(
     id bigint auto_increment primary key not null,
     account_id varchar(100),
     name varchar(50),
