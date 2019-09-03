@@ -4,7 +4,8 @@ target/
 !**/src/main/**
 !**/src/test/**
 logs/
-
+pom.xml
+src/main/resources/application.properties
 ### STS ###
 .apt_generated
 .classpath

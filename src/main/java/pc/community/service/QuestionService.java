@@ -38,16 +38,16 @@ public class QuestionService {
     private QuestionExtMapper questionExtMapper;
 
     public PageInationDTO<QuestionDTO> list(String search,Integer page, Integer size) {
-        if (StringUtils.isNotBlank(search)){
-            String[] tags = StringUtils.split(search, " ");
-            search = Arrays.stream(tags).collect(Collectors.joining("|"));
-        }
-
-
         CopyOnWriteArrayList<QuestionDTO> questionDTOS = new CopyOnWriteArrayList<>();
         PageInationDTO<QuestionDTO> pageInationDTO = new PageInationDTO<>();
         QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
-        questionQueryDTO.setSearch(search);
+
+        if (StringUtils.isNotBlank(search)){
+            String[] tags = StringUtils.split(search, " ");
+            search = Arrays.stream(tags).collect(Collectors.joining("|"));
+            questionQueryDTO.setSearch(search);
+        }
+
         Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
 
         //防止传入的page越界
@@ -107,8 +107,7 @@ public class QuestionService {
     private Integer isInBound(Integer totalPage, Integer page) {
         if (page < 1) {
             page = 1;
-        }
-        if (page > totalPage) {
+        }else if (page > totalPage) {
             page = totalPage;
         }
         return page;
