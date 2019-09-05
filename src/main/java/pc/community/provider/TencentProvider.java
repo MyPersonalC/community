@@ -32,7 +32,7 @@ public class TencentProvider {
     private String secretKey;
     @Value("${tencent.bucketName}")
     private String bucketName;
-    @Value("tencent.region")
+    @Value("${tencent.region}")
     private String regionString;
 
     public String upload(MultipartFile file) throws IOException {
