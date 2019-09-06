@@ -173,8 +173,9 @@ public class QuestionService {
         if (StringUtils.isBlank(queryDTO.getTag())) {
             return new ArrayList<>();
         }
-        queryDTO.setTag(makeQueryStringAllRegExp(queryDTO.getTag()));
-        String[] tags = StringUtils.split(queryDTO.getTag(), ",|，");
+
+        String tagStr = makeQueryStringAllRegExp(queryDTO.getTag());
+        String[] tags = StringUtils.split(tagStr, ",|，");
         String regexpTag = Arrays.stream(tags).collect(Collectors.joining("|"));
         Question question = new Question();
         question.setId(queryDTO.getId());
