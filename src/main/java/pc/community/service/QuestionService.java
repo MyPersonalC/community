@@ -37,12 +37,12 @@ public class QuestionService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
-    public PageInationDTO<QuestionDTO> list(String search,Integer page, Integer size) {
+    public PageInationDTO<QuestionDTO> list(String search, Integer page, Integer size) {
         CopyOnWriteArrayList<QuestionDTO> questionDTOS = new CopyOnWriteArrayList<>();
         PageInationDTO<QuestionDTO> pageInationDTO = new PageInationDTO<>();
         QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
 
-        if (StringUtils.isNotBlank(search)){
+        if (StringUtils.isNotBlank(search)) {
             String[] tags = StringUtils.split(search, " ");
             search = Arrays.stream(tags).collect(Collectors.joining("|"));
             questionQueryDTO.setSearch(search);
@@ -107,7 +107,7 @@ public class QuestionService {
     private Integer isInBound(Integer totalPage, Integer page) {
         if (page < 1) {
             page = 1;
-        }else if (page > totalPage) {
+        } else if (page > totalPage) {
             page = totalPage;
         }
         return page;
@@ -170,9 +170,10 @@ public class QuestionService {
     }
 
     public List<QuestionDTO> selectRelated(QuestionDTO queryDTO) {
-        if (StringUtils.isBlank(queryDTO.getTag())){
+        if (StringUtils.isBlank(queryDTO.getTag())) {
             return new ArrayList<>();
         }
+        queryDTO.setTag(makeQueryStringAllRegExp(queryDTO.getTag()));
         String[] tags = StringUtils.split(queryDTO.getTag(), ",|，");
         String regexpTag = Arrays.stream(tags).collect(Collectors.joining("|"));
         Question question = new Question();
@@ -182,9 +183,23 @@ public class QuestionService {
         List<Question> questions = questionExtMapper.selectRelated(question);
         List<QuestionDTO> questionDTOS = questions.stream().map(q -> {
             QuestionDTO questionDTO = new QuestionDTO();
-            BeanUtils.copyProperties(q,questionDTO);
+            BeanUtils.copyProperties(q, questionDTO);
             return questionDTO;
         }).collect(Collectors.toList());
         return questionDTOS;
+    }
+
+    private String makeQueryStringAllRegExp(String str) {
+        if (StringUtils.isBlank(str)) {
+            return str;
+        }
+        return str.replace("\\", "\\\\").replace("*", "\\*")
+                .replace("+", "\\+").replace("|", "\\|")
+                .replace("{", "\\{").replace("}", "\\}")
+                .replace("(", "\\(").replace(")", "\\)")
+                .replace("^", "\\^").replace("$", "\\$")
+                .replace("[", "\\[").replace("]", "\\]")
+                .replace("?", "\\?").replace(".", "\\.")
+                .replace("&", "\\&");
     }
 }
