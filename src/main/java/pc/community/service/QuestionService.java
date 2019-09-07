@@ -37,17 +37,19 @@ public class QuestionService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
-    public PageInationDTO<QuestionDTO> list(String search, Integer page, Integer size) {
+    public PageInationDTO<QuestionDTO> list(String search,String tag,  Integer page, Integer size) {
         CopyOnWriteArrayList<QuestionDTO> questionDTOS = new CopyOnWriteArrayList<>();
         PageInationDTO<QuestionDTO> pageInationDTO = new PageInationDTO<>();
         QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
 
         if (StringUtils.isNotBlank(search)) {
+            search = makeQueryStringAllRegExp(search);
             String[] tags = StringUtils.split(search, " ");
             search = Arrays.stream(tags).collect(Collectors.joining("|"));
-            questionQueryDTO.setSearch(search);
         }
-
+        questionQueryDTO.setSearch(search);
+        tag = makeQueryStringAllRegExp(tag);
+        questionQueryDTO.setTag(tag);
         Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
 
         //防止传入的page越界

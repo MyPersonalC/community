@@ -156,11 +156,17 @@ body {
     color: #499ef3;
 }
 
-.menu .icon:hover {
+.menu .icon:hover{
     color: #499ef3;
 }
 .index-ad{
-    margin-top: 20%;
+    margin-top: 10%;
+}
+.index-hotTag{
+    margin-bottom: 30px;
+}
+.index-sp{
+    margin-bottom: 12px;
 }
 .footer{
     padding: 10px 30%;

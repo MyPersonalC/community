@@ -49,25 +49,25 @@
                 <span th:class="${pageInation!=null} ? 'active' : ''">
                     <ul class="pagination">
                         <li th:if="${pageInation.showFirstPage}">
-                           <a href="/?page=1" aria-label="Previous">
+                           <a th:href="@{/(page= 1,search=${search},tag=${tag})}" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                            </a>
                         </li>
                         <li th:if="${pageInation.showPrevious}">
-                            <a th:href="@{/(page=${(pageInation.page) - 1},search=${search})}" aria-label="Previous">
+                            <a th:href="@{/(page=${(pageInation.page) - 1},search=${search},tag=${tag})}" aria-label="Previous">
                                 <span aria-hidden="true">&lsaquo;</span>
                             </a>
                         </li>
                         <li th:class="${pageInation.page == page} ? 'active' : ''" th:each="page : ${pageInation.pages}">
-                            <a th:href="@{/(page=${page},search=${search})}" th:text="${page}"></a>
+                            <a th:href="@{/(page=${page},search=${search},tag=${tag})}" th:text="${page}"></a>
                         </li>
                         <li th:if="${pageInation.showNext}">
-                            <a th:href="@{/(page=${(pageInation.page) + 1},search=${search})}" aria-label="Next">
+                            <a th:href="@{/(page=${(pageInation.page) + 1},search=${search},tag=${tag})}" aria-label="Next">
                                 <span aria-hidden="true">&rsaquo;</span>
                             </a>
                         </li>
                         <li th:if="${pageInation.showEndPage}">
-                            <a th:href="@{/(page=${pageInation.totalPage},search=${search})} " aria-label="Next">
+                            <a th:href="@{/(page=${pageInation.totalPage},search=${search},tag=${tag})} " aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
@@ -88,6 +88,33 @@
                         </div>
                     </li>
                 </ul>
+            </div>
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 index-sp">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 index-hotTag">
+                <h4>热门标签</h4>
+                <div class="media" th:each="hotTag : ${tags}">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-rounded"
+                                 src="/images/hotTag.png">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            <a th:href="@{/(page= 1,search=${search},tag=${hotTag.name})}">
+                                <span class="label label-info question-tag">
+                                    <span class="glyphicon glyphicon-tags"></span>
+                                    <span class="label label-info" th:text="${hotTag.name}"></span>
+                                </span>
+                            </a>
+                        </h4>
+                        <!--                    <span th:text="${question.description}"></span> <br>-->
+                        <span class="text-desc">
+                        <span th:text="${hotTag.questionCount}"></span>个问题 ·
+                        <span th:text="${hotTag.commentCount}"></span>个回复
+                    </span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
